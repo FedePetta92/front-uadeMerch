@@ -1,0 +1,5 @@
+[
+  { "id": 1, "nombre": "Remera UADE", "descripcion": "Remera oficial algodón", "precio": 15000, "stock": 50 },
+  { "id": 2, "nombre": "Buzo UADE", "descripcion": "Buzo canguro con capucha", "precio": 32000, "stock": 20 },
+  { "id": 3, "nombre": "Taza UADE", "descripcion": "Taza cerámica 350ml", "precio": 6000, "stock": 80 }
+]
