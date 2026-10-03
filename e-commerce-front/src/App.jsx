@@ -1,7 +1,10 @@
 import { Routes, Route } from 'react-router-dom'
 import Listado from './components/Listado'
-import ProductDetail from './components/ProductDetail'
-import Cart from './components/Cart'
+import Home from './pages/Home'
+import ProductDetail from './pages/ProductDetail.jsx'
+import Cart from './pages/Cart.jsx'
+import Login from './pages/Login.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 import './App.css'
 
 function App() {
@@ -9,9 +12,13 @@ function App() {
     <div className="App">
       <h1>Catálogo de Productos</h1>
       <Routes>
-        <Route path="/" element={<Listado />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/catalogo" element={<Listado />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<ProtectedRoute>
+                                        <Cart/>
+                                   </ProtectedRoute>} />
       </Routes>
     </div>
   )

@@ -16,7 +16,7 @@ function ProductDetail() {
 
   return (
     <div className="product-detail">
-      <Link to="/">← Volver al catálogo</Link>
+      <Link to="/catalogo">← Volver al catálogo</Link>
       <h2>{producto.nombre}</h2>
       <p>{producto.descripcion}</p>
       <p className="precio">${producto.precio.toLocaleString('es-AR')}</p>
