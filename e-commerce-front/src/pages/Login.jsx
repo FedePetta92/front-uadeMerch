@@ -9,7 +9,7 @@ function Login() {
     const handleSubmit = (e) => {
         e.preventDefault(); // evita que el form recargue la página al enviarse
         localStorage.setItem('logueado', 'true'); // guarda en el navegador que el usuario está logueado
-        navigate('/cart'); // redirige al carrito una vez autenticado
+        navigate('/cart', { replace: true }); // redirige al carrito sin dejar el login en el historial
     }
 
     return (
