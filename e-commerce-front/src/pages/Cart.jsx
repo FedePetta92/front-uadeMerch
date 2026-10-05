@@ -5,7 +5,7 @@ function Cart() {
 
   return (
     <div className="cart">
-      <Link to="/">← Volver al catálogo</Link>
+      <Link to="/catalogo">← Volver al catálogo</Link>
       <h2>Tu carrito</h2>
 
       {carrito.length > 0 ? (
