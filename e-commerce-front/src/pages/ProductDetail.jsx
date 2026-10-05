@@ -9,7 +9,7 @@ function ProductDetail() {
     return (
       <div>
         <p>Producto no encontrado</p>
-        <Link to="/">Volver al catálogo</Link>
+        <Link to="/catalogo">Volver al catálogo</Link>
       </div>
     )
   }
