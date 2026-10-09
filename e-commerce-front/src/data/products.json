@@ -1,5 +1,31 @@
 [
-  { "id": 1, "nombre": "Remera UADE", "descripcion": "Remera oficial algodón", "precio": 15000, "stock": 50 },
-  { "id": 2, "nombre": "Buzo UADE", "descripcion": "Buzo canguro con capucha", "precio": 32000, "stock": 20 },
-  { "id": 3, "nombre": "Taza UADE", "descripcion": "Taza cerámica 350ml", "precio": 6000, "stock": 80 }
+  { "id": 101, "nombre": "Remera UADE",             "categoria": "indumentaria", "descripcion": "Remera oficial algodón con logo UADE estampado",                           "precio": 15000, "stock": 50 },
+  { "id": 102, "nombre": "Buzo Canguro UADE",       "categoria": "indumentaria", "descripcion": "Buzo canguro con capucha y letras UADE bordadas",                         "precio": 32000, "stock": 20 },
+  { "id": 103, "nombre": "Buzo Cuello Redondo UADE","categoria": "indumentaria", "descripcion": "Buzo cuello redondo con letras UADE bordadas, varios colores",             "precio": 29000, "stock": 18 },
+  { "id": 104, "nombre": "Campera UADE",            "categoria": "indumentaria", "descripcion": "Campera rompeviento con logo UADE bordado",                                "precio": 45000, "stock": 15 },
+  { "id": 105, "nombre": "Chomba UADE",             "categoria": "indumentaria", "descripcion": "Chomba piqué con logo UADE bordado en el pecho",                           "precio": 20000, "stock": 22 },
+  { "id": 106, "nombre": "Gorra UADE",              "categoria": "indumentaria", "descripcion": "Gorra con visera y logo UADE bordado, regulable",                          "precio": 8000,  "stock": 40 },
+  { "id": 107, "nombre": "Gorro de Invierno UADE",  "categoria": "indumentaria", "descripcion": "Gorro de lana con logo UADE bordado",                                      "precio": 6500,  "stock": 35 },
+
+  { "id": 201, "nombre": "Taza Cerámica UADE",      "categoria": "bazar",        "descripcion": "Taza cerámica 350ml con logo UADE",                                       "precio": 6000,  "stock": 80 },
+  { "id": 202, "nombre": "Mate Acero UADE",         "categoria": "bazar",        "descripcion": "Mate de acero inoxidable con grabado láser del logo UADE",                 "precio": 12000, "stock": 35 },
+  { "id": 203, "nombre": "Mate de Vidrio UADE",     "categoria": "bazar",        "descripcion": "Mate de vidrio forrado con cuero sintético y logo UADE",                   "precio": 9500,  "stock": 25 },
+  { "id": 204, "nombre": "Bombilla Acero",          "categoria": "bazar",        "descripcion": "Bombilla de acero inoxidable con filtro",                                  "precio": 3500,  "stock": 60 },
+  { "id": 205, "nombre": "Termo Térmico UADE",      "categoria": "bazar",        "descripcion": "Termo térmico 1L con logo UADE, mantiene temperatura 12hs",               "precio": 18000, "stock": 30 },
+  { "id": 206, "nombre": "Yerbera UADE",            "categoria": "bazar",        "descripcion": "Yerbera de acero con tapa hermética y logo UADE",                          "precio": 7500,  "stock": 40 },
+  { "id": 207, "nombre": "Azucarera UADE",          "categoria": "bazar",        "descripcion": "Azucarera de cerámica con logo UADE",                                      "precio": 5500,  "stock": 45 },
+  { "id": 208, "nombre": "Vaso Térmico Café UADE",  "categoria": "bazar",        "descripcion": "Vaso térmico 350ml para café con tapa y logo UADE",                       "precio": 8500,  "stock": 28 },
+  { "id": 209, "nombre": "Botella Deportiva UADE",  "categoria": "bazar",        "descripcion": "Botella deportiva recargable 750ml con logo UADE",                         "precio": 10000, "stock": 55 },
+
+  { "id": 301, "nombre": "Lanyard UADE",            "categoria": "accesorios",   "descripcion": "Cinta porta credencial con logo UADE, ideal para molinetes",              "precio": 2500,  "stock": 100 },
+  { "id": 302, "nombre": "Llavero UADE",            "categoria": "accesorios",   "descripcion": "Llavero metálico con logo UADE grabado",                                  "precio": 1800,  "stock": 120 },
+  { "id": 303, "nombre": "Pin UADE",                "categoria": "accesorios",   "descripcion": "Pin metálico esmaltado con logo UADE",                                     "precio": 1200,  "stock": 150 },
+  { "id": 304, "nombre": "Mochila UADE",            "categoria": "accesorios",   "descripcion": "Mochila universitaria con logo UADE bordado, varios compartimentos",       "precio": 38000, "stock": 20 },
+  { "id": 305, "nombre": "Tote Bag UADE",           "categoria": "accesorios",   "descripcion": "Bolso de tela resistente con diseño institucional UADE",                   "precio": 5000,  "stock": 60 },
+
+  { "id": 401, "nombre": "Cuaderno Espiralado UADE","categoria": "libreria",     "descripcion": "Cuaderno universitario espiralado A4 con gráfica UADE, 80 hojas",         "precio": 4500,  "stock": 70 },
+  { "id": 402, "nombre": "Agenda UADE",             "categoria": "libreria",     "descripcion": "Agenda anual tapa dura con diseño institucional UADE",                     "precio": 9000,  "stock": 40 },
+  { "id": 403, "nombre": "Anotador UADE",           "categoria": "libreria",     "descripcion": "Anotador tapa blanda con logo UADE, 50 hojas",                             "precio": 3000,  "stock": 90 },
+  { "id": 404, "nombre": "Lapicera UADE",           "categoria": "libreria",     "descripcion": "Lapicera metálica con logo UADE grabado",                                  "precio": 2000,  "stock": 200 },
+  { "id": 405, "nombre": "Cartuchera UADE",         "categoria": "libreria",     "descripcion": "Cartuchera de tela con logo UADE estampado",                               "precio": 5500,  "stock": 55 }
 ]
