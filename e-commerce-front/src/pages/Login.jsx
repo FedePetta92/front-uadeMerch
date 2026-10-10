@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 // URL base del backend. Todos los fetch apuntan a este servidor.
 const API_URL = 'http://localhost:8080'
@@ -83,6 +83,8 @@ function Login() {
             <button type="submit" disabled={cargando}>
                 {cargando ? 'Ingresando...' : 'Ingresar'}
             </button>
+
+            <p>¿No tenés cuenta? <Link to="/register">Registrate</Link></p>
         </form>
     )
 }
