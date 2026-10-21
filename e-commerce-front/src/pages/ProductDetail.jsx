@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useCart } from '../context/CartContext'
+import { useSelector, useDispatch } from 'react-redux'
+import { agregar } from '../store/slices/cartSlice'
 import QuantitySelector from '../components/QuantitySelector'
 
 // URL base del backend. Todos los fetch apuntan a este servidor.
@@ -10,7 +11,8 @@ function ProductDetail() {
 
   // useParams extrae el :id de la URL, ej: /product/3 → id = "3"
   const { id } = useParams()
-  const { carrito, agregar } = useCart()
+  const carrito = useSelector((state) => state.cart.items)
+  const dispatch = useDispatch()
   const [cantidad, setCantidad] = useState(1)
 
   // producto: objeto con los datos del backend
@@ -65,7 +67,7 @@ function ProductDetail() {
   const disponible = producto.stock - enCarrito
 
   const handleAgregar = () => {
-    agregar(producto, cantidad)
+    dispatch(agregar({ producto, cantidad }))
     setCantidad(1)
   }
 

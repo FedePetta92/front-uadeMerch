@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom'
-import { useCart } from '../context/CartContext'
+import { useSelector, useDispatch } from 'react-redux'
+import { eliminar, actualizar, vaciar } from '../store/slices/cartSlice'
 import QuantitySelector from '../components/QuantitySelector'
 
 function Cart() {
-  const { carrito, eliminar, actualizar, vaciar } = useCart()
+  // useSelector suscribe este componente al carrito: si cambia, se vuelve a dibujar
+  const carrito = useSelector((state) => state.cart.items)
+  // dispatch sirve para ejecutar las acciones del slice
+  const dispatch = useDispatch()
 
   // Suma precio * cantidad de cada item para obtener el total
   const total = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)
@@ -21,17 +25,17 @@ function Cart() {
                 {item.nombre}
                 <QuantitySelector
                   cantidad={item.cantidad}
-                  onChange={(nueva) => actualizar(item.id, nueva)}
+                  onChange={(nueva) => dispatch(actualizar({ id: item.id, cantidad: nueva }))}
                   min={1}
                   max={item.stock}
                 />
                 ${(item.precio * item.cantidad).toLocaleString('es-AR')}
-                <button onClick={() => eliminar(item.id)}>Quitar</button>
+                <button onClick={() => dispatch(eliminar(item.id))}>Quitar</button>
               </li>
             ))}
           </ul>
           <p><strong>Total: ${total.toLocaleString('es-AR')}</strong></p>
-          <button onClick={vaciar}>Vaciar carrito</button>
+          <button onClick={() => dispatch(vaciar())}>Vaciar carrito</button>
         </>
       ) : (
         <p>Tu carrito está vacío</p>
