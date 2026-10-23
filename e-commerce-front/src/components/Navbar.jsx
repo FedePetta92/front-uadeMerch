@@ -16,15 +16,6 @@ function Navbar() {
     const getLinkClass = ({ isActive }) => isActive ? 'nav-link active' : 'nav-link'
 
     return (
-<<<<<<< HEAD
-        <nav>
-            <Link to="/">Inicio</Link> | <Link to="/catalogo">Catálogo</Link> | <Link to="/cart">Carrito ({cantidad})</Link> |{' '}
-            {logueado ? (
-                <button onClick={handleSalir}>Salir</button>
-            ) : (
-                <Link to="/login">Ingresar</Link>
-            )}
-=======
         <nav className="navbar">
             <div className="navbar-brand">
                 <Link to="/">UADE Merch</Link>
@@ -46,7 +37,6 @@ function Navbar() {
                     </>
                 )}
             </div>
->>>>>>> 3e8062f (Implementacion base del mockup para el nuevo UI de UadeMerch)
         </nav>
     )
 }
