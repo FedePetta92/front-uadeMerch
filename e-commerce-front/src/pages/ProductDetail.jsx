@@ -71,7 +71,9 @@ function ProductDetail() {
 
   return (
     <div className="product-detail">
-      <Link to="/catalogo">← Volver al catálogo</Link>
+      <Link to="/catalogo" style={{ color: '#002b5c', textDecoration: 'none', marginBottom: '20px', display: 'inline-block' }}>
+        ← Volver al catálogo
+      </Link>
       <h2>{producto.nombre}</h2>
       <p>{producto.descripcion}</p>
       {/* precio viene como número desde el backend, toLocaleString lo formatea con puntos de miles */}
@@ -80,7 +82,9 @@ function ProductDetail() {
       {disponible > 0 ? (
         <>
           <QuantitySelector cantidad={cantidad} onChange={setCantidad} min={1} max={disponible} />
-          <button onClick={handleAgregar}>Agregar al carrito</button>
+          <button onClick={handleAgregar} className="btn-primary btn-ancho" disabled={cantidad < 1 || cantidad > disponible}>
+            Agregar al carrito
+          </button>
         </>
       ) : (
         <p>Ya tenés el máximo de stock en el carrito</p>

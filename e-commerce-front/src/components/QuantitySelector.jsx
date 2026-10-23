@@ -1,19 +1,27 @@
-function QuantitySelector({cantidad, onChange, min = 0, max}) {
-    const restar = () => {
-        if (cantidad > min) onChange(cantidad - 1)
-    }
-
-    const sumar = () => {
-        if (cantidad < max) onChange(cantidad + 1)
-    }
-
-    return (
-        <div className="quantity-selector">
-            <button onClick={restar} disabled={cantidad <= min}>-</button>
-            <span>{cantidad}</span>
-            <button onClick={sumar} disabled={cantidad >= max}>+</button>
-        </div>
-    )
+function QuantitySelector({ cantidad, onChange, min = 1, max}) {
+  return (
+    <div className="quantity-selector">
+      <button 
+        type="button" 
+        className="qty-btn" 
+        onClick={() => onChange(Math.max(min, cantidad - 1))}
+        disabled={cantidad <= min}
+      >
+        -
+      </button>
+      
+      <span className="qty-number">{cantidad}</span>
+      
+      <button 
+        type="button" 
+        className="qty-btn" 
+        onClick={() => onChange(Math.min(max, cantidad + 1))}
+        disabled={cantidad >= max}
+      >
+        +
+      </button>
+    </div>
+  )
 }
 
 export default QuantitySelector
