@@ -56,36 +56,44 @@ function Login() {
             })
     }
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <h2>Iniciar sesión</h2>
+        return (
+        <div className="auth-container">
+            <form onSubmit={handleSubmit} className="auth-form">
+                <h2>Iniciar sesión</h2>
 
-            {/* Muestra el error si las credenciales son incorrectas */}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+                {error && <p className="error-msg">{error}</p>}
 
-            {/* Campo email: el backend espera el campo "email", no "usuario" */}
-            <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                type="email"
-                required
-            />
-            <input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Contraseña"
-                type="password"
-                required
-            />
+                <div className="form-group">
+                    <label>Email</label>
+                    <input
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="ejemplo@uade.edu.ar"
+                        type="email"
+                        required
+                    />
+                </div>
 
-            {/* disabled mientras espera la respuesta del backend para evitar doble envío */}
-            <button type="submit" disabled={cargando}>
-                {cargando ? 'Ingresando...' : 'Ingresar'}
-            </button>
+                <div className="form-group">
+                    <label>Contraseña</label>
+                    <input
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="********"
+                        type="password"
+                        required
+                    />
+                </div>
 
-            <p>¿No tenés cuenta? <Link to="/register">Registrate</Link></p>
-        </form>
+                <button type="submit" className="btn-primary" disabled={cargando}>
+                    {cargando ? 'Ingresando...' : 'Ingresar'}
+                </button>
+
+                <p className="auth-link">
+                    ¿No tenés cuenta? <Link to="/register">Registrate</Link>
+                </p>
+            </form>
+        </div>
     )
 }
 
