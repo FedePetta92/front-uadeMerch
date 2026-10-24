@@ -45,8 +45,8 @@ function Cart() {
                   ${(item.precio * item.cantidad).toLocaleString('es-AR')}
                 </div>
                 
-                <button 
-                  onClick={() => eliminar(item.id)} 
+                <button
+                  onClick={() => dispatch(eliminar(item.id))}
                   className="btn-secondary"
                   style={{ padding: '5px 15px', fontSize: '0.9rem' }}
                 >
@@ -59,7 +59,7 @@ function Cart() {
             Total: ${total.toLocaleString('es-AR')}
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-            <button onClick={vaciar} className="btn-secondary">Vaciar carrito</button>
+            <button onClick={() => dispatch(vaciar())} className="btn-secondary">Vaciar carrito</button>
             <button className="btn-primary" style={{ padding: '15px 30px' }}>Finalizar compra</button>
           </div>
         </>
