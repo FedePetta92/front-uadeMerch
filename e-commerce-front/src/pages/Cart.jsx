@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom'
-import { useCart } from '../context/CartContext'
+import { useSelector, useDispatch } from 'react-redux'
+import { eliminar, actualizar, vaciar } from '../store/slices/cartSlice'
 import QuantitySelector from '../components/QuantitySelector'
 
 function Cart() {
-  const { carrito, eliminar, actualizar, vaciar } = useCart()
+  // useSelector suscribe este componente al carrito: si cambia, se vuelve a dibujar
+  const carrito = useSelector((state) => state.cart.items)
+  // dispatch sirve para ejecutar las acciones del slice
+  const dispatch = useDispatch()
 
   // Suma precio * cantidad de cada item para obtener el total
   const total = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)
@@ -32,7 +36,7 @@ function Cart() {
                 
                 <QuantitySelector
                   cantidad={item.cantidad}
-                  onChange={(nueva) => actualizar(item.id, nueva)}
+                  onChange={(nueva) => dispatch(actualizar({ id: item.id, cantidad: nueva }))}
                   min={1}
                   max={item.stock}
                 />
@@ -41,8 +45,8 @@ function Cart() {
                   ${(item.precio * item.cantidad).toLocaleString('es-AR')}
                 </div>
                 
-                <button 
-                  onClick={() => eliminar(item.id)} 
+                <button
+                  onClick={() => dispatch(eliminar(item.id))}
                   className="btn-secondary"
                   style={{ padding: '5px 15px', fontSize: '0.9rem' }}
                 >
@@ -55,7 +59,7 @@ function Cart() {
             Total: ${total.toLocaleString('es-AR')}
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-            <button onClick={vaciar} className="btn-secondary">Vaciar carrito</button>
+            <button onClick={() => dispatch(vaciar())} className="btn-secondary">Vaciar carrito</button>
             <button className="btn-primary" style={{ padding: '15px 30px' }}>Finalizar compra</button>
           </div>
         </>
