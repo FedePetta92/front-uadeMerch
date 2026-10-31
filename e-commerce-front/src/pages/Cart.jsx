@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { eliminar, actualizar, vaciar } from '../store/slices/cartSlice'
+import { updateCartItem, removeFromCart, clearCart } from '../store/slices/cartSlice'
 import QuantitySelector from '../components/QuantitySelector'
 
 function Cart() {
   // useSelector suscribe este componente al carrito: si cambia, se vuelve a dibujar
   const carrito = useSelector((state) => state.cart.items)
+  // cargando: hay un pedido al backend en curso / error: el último pedido falló
+  const { cargando, error } = useSelector((state) => state.cart)
   // dispatch sirve para ejecutar las acciones del slice
   const dispatch = useDispatch()
 
@@ -18,6 +20,8 @@ function Cart() {
         ← Volver al catálogo
       </Link>
       <h2>Tu carrito</h2>
+
+      {error && <p className="error-msg">{error}</p>}
 
       {carrito.length > 0 ? (
         <>
@@ -36,7 +40,8 @@ function Cart() {
                 
                 <QuantitySelector
                   cantidad={item.cantidad}
-                  onChange={(nueva) => dispatch(actualizar({ id: item.id, cantidad: nueva }))}
+                  // Mientras hay un pedido en curso se ignoran los clicks, para no pisar un cambio con otro
+                  onChange={(nueva) => !cargando && dispatch(updateCartItem({ id: item.id, cantidad: nueva }))}
                   min={1}
                   max={item.stock}
                 />
@@ -46,7 +51,8 @@ function Cart() {
                 </div>
                 
                 <button
-                  onClick={() => dispatch(eliminar(item.id))}
+                  onClick={() => dispatch(removeFromCart(item.id))}
+                  disabled={cargando}
                   className="btn-secondary"
                   style={{ padding: '5px 15px', fontSize: '0.9rem' }}
                 >
@@ -59,7 +65,7 @@ function Cart() {
             Total: ${total.toLocaleString('es-AR')}
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-            <button onClick={() => dispatch(vaciar())} className="btn-secondary">Vaciar carrito</button>
+            <button onClick={() => dispatch(clearCart())} className="btn-secondary" disabled={cargando}>Vaciar carrito</button>
             <button className="btn-primary" style={{ padding: '15px 30px' }}>Finalizar compra</button>
           </div>
         </>

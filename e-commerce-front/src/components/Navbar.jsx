@@ -1,15 +1,17 @@
 import { NavLink, Link, useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout, selectLogueado } from '../store/slices/userSlice'
 
 function Navbar() {
     const navigate = useNavigate()
-    const logueado = localStorage.getItem('logueado') // busca en el navegador si el usuario está logueado
+    const dispatch = useDispatch()
+    const logueado = useSelector(selectLogueado) // lee del store si el usuario está logueado (se actualiza solo)
 
     // cantidad de productos distintos que hay en el carrito (se actualiza sola)
     const cantidad = useSelector((state) => state.cart.items.length)
 
     const handleSalir = () => {
-        localStorage.removeItem('logueado') // borra la marca de login
+        dispatch(logout()) // cierra la sesión (el carrito también se vacía en pantalla)
         navigate('/') // vuelve al inicio
     }
 
@@ -25,7 +27,7 @@ function Navbar() {
             <div className="navbar-links">
                 <NavLink to="/" className={getLinkClass}>Inicio</NavLink>
                 <NavLink to="/catalogo" className={getLinkClass}>Catálogo</NavLink>
-                <NavLink to="/cart" className={getLinkClass}>Carrito</NavLink>
+                <NavLink to="/cart" className={getLinkClass}>Carrito ({cantidad})</NavLink>
             </div>
 
             <div className="navbar-auth">
