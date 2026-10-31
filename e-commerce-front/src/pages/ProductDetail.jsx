@@ -15,18 +15,21 @@ function ProductDetail() {
   const dispatch = useDispatch()
   const [cantidad, setCantidad] = useState(1)
 
+  // resultado guarda la respuesta del backend junto con el id que se pidió:
   // producto: objeto con los datos del backend
-  // cargando: true mientras espera la respuesta
   // error: mensaje de error si el fetch falla
-  const [producto, setProducto] = useState(null)
-  const [cargando, setCargando] = useState(true)
-  const [error, setError] = useState(null)
+  const [resultado, setResultado] = useState({ id: null, producto: null, error: null })
+  const { producto, error } = resultado
+
+  // cargando: true mientras el resultado guardado no sea del id de la URL.
+  // Se calcula en vez de guardarse con setState, así el efecto no actualiza el estado
+  // de forma sincrónica (eso hace que el componente se dibuje dos veces seguidas)
+  const cargando = resultado.id !== id
 
   // useEffect se dispara cada vez que cambia el id en la URL
   useEffect(() => {
-
-    setCargando(true)
-    setError(null)
+    // Si el usuario cambia de producto antes de que llegue la respuesta, la vieja se ignora
+    let cancelado = false
 
     // Llama al endpoint GET /api/productos/{id} para traer el detalle de un producto
     fetch(`${API_URL}/api/productos/${id}`)
@@ -37,16 +40,15 @@ function ProductDetail() {
         return res.json()
       })
       .then((data) => {
-        // Guarda el producto en el estado y apaga el indicador de carga
-        setProducto(data)
-        setCargando(false)
+        // Guarda el producto junto con su id (eso apaga el indicador de carga)
+        if (!cancelado) setResultado({ id, producto: data, error: null })
       })
       .catch((err) => {
         // Si algo falla, guarda el mensaje de error
-        setError(err.message)
-        setCargando(false)
+        if (!cancelado) setResultado({ id, producto: null, error: err.message })
       })
 
+    return () => { cancelado = true }
   }, [id]) // Se re-ejecuta si el usuario navega a otro producto (cambia el id)
 
   // Muestra mensaje mientras carga

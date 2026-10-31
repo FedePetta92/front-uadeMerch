@@ -25,7 +25,7 @@ function Navbar() {
             <div className="navbar-links">
                 <NavLink to="/" className={getLinkClass}>Inicio</NavLink>
                 <NavLink to="/catalogo" className={getLinkClass}>Catálogo</NavLink>
-                <NavLink to="/cart" className={getLinkClass}>Carrito</NavLink>
+                <NavLink to="/cart" className={getLinkClass}>Carrito ({cantidad})</NavLink>
             </div>
 
             <div className="navbar-auth">
