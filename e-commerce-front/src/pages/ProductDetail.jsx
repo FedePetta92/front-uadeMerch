@@ -70,27 +70,61 @@ function ProductDetail() {
   }
 
   return (
-    <div className="product-detail">
-      <Link to="/catalogo" style={{ color: '#002b5c', textDecoration: 'none', marginBottom: '20px', display: 'inline-block' }}>
+    <div className="product-detail-wrapper">
+      
+      <Link to="/catalogo" className="back-link">
         ← Volver al catálogo
       </Link>
-      <h2>{producto.nombre}</h2>
-      <p>{producto.descripcion}</p>
-      {/* precio viene como número desde el backend, toLocaleString lo formatea con puntos de miles */}
-      <p className="precio">${Number(producto.precio).toLocaleString('es-AR')}</p>
-      <p>Stock disponible: {producto.stock}</p>
-      {disponible > 0 ? (
-        <>
-          <QuantitySelector cantidad={cantidad} onChange={setCantidad} min={1} max={disponible} />
-          <button onClick={handleAgregar} className="btn-primary btn-ancho" disabled={cantidad < 1 || cantidad > disponible}>
-            Agregar al carrito
-          </button>
-        </>
-      ) : (
-        <p>Ya tenés el máximo de stock en el carrito</p>
-      )}
+
+      
+      <div className="product-detail-grid">
+        
+        {/* COLUMNA IZQUIERDA: La Imagen */}
+        <div className="product-detail-image">
+          <div className="image-placeholder">
+            [IMAGEN DEL PRODUCTO]
+          </div>
+        </div>
+
+                {/* COLUMNA DERECHA: La Información y Botones */}
+        <div className="product-detail-info">
+          <h1 className="detail-title">{producto.nombre}</h1>
+          
+          {/* 👇 Envolvemos la descripción para darle más espacio abajo */}
+          <p className="detail-description">{producto.descripcion}</p>
+          
+          <div className="info-precio-stock">
+            <p className="detail-price">${Number(producto.precio).toLocaleString('es-AR')}</p>
+            <p className="detail-stock">Stock: {producto.stock}</p>
+          </div>
+          
+          {disponible > 0 ? (
+            <>
+              <div className="detail-actions">
+                <QuantitySelector cantidad={cantidad} onChange={setCantidad} min={1} max={disponible} />
+              </div>
+              
+              {/* 👇 Contenedor de botones (les vamos a bajar el alto con CSS) */}
+              <div className="detail-buttons">
+                <button 
+                  onClick={handleAgregar} 
+                  className="btn-primary" 
+                  disabled={cantidad < 1 || cantidad > disponible}
+                >
+                  Agregar al carrito
+                </button>
+                
+                <Link to="/cart" className="btn-secondary">
+                  Ir al carrito
+                </Link>
+              </div>
+            </>
+          ) : (
+            <p>Ya tenés el máximo de stock en el carrito</p>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
-
 export default ProductDetail
