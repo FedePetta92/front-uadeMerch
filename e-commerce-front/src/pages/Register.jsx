@@ -1,118 +1,109 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 
-// URL base del backend
 const API_URL = 'http://localhost:8080'
 
 function Register() {
-    // Cada campo del formulario tiene su propio estado
-    const [nombre, setNombre] = useState('')
-    const [apellido, setApellido] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [fechaNacimiento, setFechaNacimiento] = useState('')
-    const [sexo, setSexo] = useState('')
+  const navigate = useNavigate()
+  const [cargando, setCargando] = useState(false)
+  const [error, setError] = useState(null)
 
-    // error muestra el mensaje si el registro falla
-    const [error, setError] = useState(null)
+  const [formData, setFormData] = useState({
+    nombre: '',
+    apellido: '',
+    email: '',
+    password: '',
+    fechaNacimiento: '',
+    sexo: ''
+  })
 
-    // cargando evita que el usuario haga doble click mientras espera la respuesta
-    const [cargando, setCargando] = useState(false)
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
 
-    const navigate = useNavigate()
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setCargando(true)
+    setError(null)
 
-    const handleSubmit = (e) => {
-        // Evita que el form recargue la página al enviarse
-        e.preventDefault()
+    // Petición al backend (asumiendo que tu /api/usuarios acepta estos campos)
+    fetch(`${API_URL}/api/usuarios`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Error al registrar usuario. Verificá los datos.')
+        return res.json()
+      })
+      .then(() => {
+        setCargando(false)
+        alert('¡Cuenta creada con éxito! Ya podés iniciar sesión.')
+        navigate('/login')
+      })
+      .catch((err) => {
+        setError(err.message)
+        setCargando(false)
+      })
+  }
 
-        setCargando(true)
-        setError(null)
+  return (
+    <div className="auth-page-wrapper">
+      <h1 className="auth-title">Crear cuenta</h1>
+      
+      <div className="auth-card">
+        {error && <p className="error-msg">{error}</p>}
 
-        // Llama al endpoint POST /api/usuarios enviando todos los campos en el body como JSON
-        fetch(`${API_URL}/api/usuarios`, {
-            method: 'POST',
-            headers: {
-                // Le indica al backend que el body viene en formato JSON
-                'Content-Type': 'application/json'
-            },
-            // Convierte el objeto JavaScript a string JSON para enviarlo
-            body: JSON.stringify({ nombre, apellido, email, password, fechaNacimiento, sexo })
-        })
-            .then((res) => {
-                // Si la respuesta no es 2xx (ej: email duplicado) lanza un error
-                if (!res.ok) throw new Error('No se pudo crear la cuenta. El email puede estar en uso.')
-                return res.json()
-            })
-            .then(() => {
-                setCargando(false)
-                // Registro exitoso: redirige al login para que el usuario ingrese
-                navigate('/login')
-            })
-            .catch((err) => {
-                setError(err.message)
-                setCargando(false)
-            })
-    }
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label>Nombre</label>
+            <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
+          </div>
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <h2>Crear cuenta</h2>
+          <div className="form-group">
+            <label>Apellido</label>
+            <input type="text" name="apellido" value={formData.apellido} onChange={handleChange} required />
+          </div>
 
-            {/* Muestra el error si el registro falló */}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+          <div className="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+          </div>
 
-            <input
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                placeholder="Nombre"
-                required
-            />
-            <input
-                value={apellido}
-                onChange={(e) => setApellido(e.target.value)}
-                placeholder="Apellido"
-                required
-            />
-            <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                type="email"
-                required
-            />
-            <input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Contraseña"
-                type="password"
-                required
-            />
+          <div className="form-group">
+            <label>Contraseña</label>
+            <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+          </div>
 
-            {/* fechaNacimiento debe enviarse en formato YYYY-MM-DD, que es lo que devuelve input type="date" */}
+          <div className="form-group">
             <label>Fecha de nacimiento</label>
-            <input
-                value={fechaNacimiento}
-                onChange={(e) => setFechaNacimiento(e.target.value)}
-                type="date"
-                required
-            />
+            <input type="date" name="fechaNacimiento" value={formData.fechaNacimiento} onChange={handleChange} />
+          </div>
 
-            {/* sexo debe coincidir con el enum del backend: MASCULINO, FEMENINO u OTRO */}
-            <select value={sexo} onChange={(e) => setSexo(e.target.value)} required>
-                <option value="">Seleccioná tu sexo</option>
-                <option value="MASCULINO">Masculino</option>
-                <option value="FEMENINO">Femenino</option>
-                <option value="OTRO">Otro</option>
+          <div className="form-group">
+            <label>Sexo</label>
+            <select name="sexo" value={formData.sexo} onChange={handleChange} className="select-input">
+              <option value="">Seleccioná tu sexo</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+              <option value="O">Otro</option>
             </select>
+          </div>
 
-            {/* disabled mientras espera la respuesta del backend para evitar doble envío */}
-            <button type="submit" disabled={cargando}>
-                {cargando ? 'Creando cuenta...' : 'Registrarse'}
-            </button>
-
-            <p>¿Ya tenés cuenta? <Link to="/login">Iniciá sesión</Link></p>
+          <button type="submit" className="btn-primary btn-full" disabled={cargando}>
+            {cargando ? 'Registrando...' : 'Registrarme'}
+          </button>
         </form>
-    )
+      </div>
+
+      <p className="auth-footer">
+        ¿Ya tenés cuenta? <Link to="/login">Ingresá</Link>
+      </p>
+    </div>
+  )
 }
 
 export default Register
