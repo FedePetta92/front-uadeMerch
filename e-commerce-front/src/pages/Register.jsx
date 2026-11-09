@@ -87,9 +87,9 @@ function Register() {
             <label>Sexo</label>
             <select name="sexo" value={formData.sexo} onChange={handleChange} className="select-input">
               <option value="">Seleccioná tu sexo</option>
-              <option value="M">Masculino</option>
-              <option value="F">Femenino</option>
-              <option value="O">Otro</option>
+              <option value="MASCULINO">Masculino</option>
+              <option value="FEMENINO">Femenino</option>
+              <option value="OTRO">Otro</option>
             </select>
           </div>
 
