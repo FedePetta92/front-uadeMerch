@@ -1,17 +1,39 @@
-import { NavLink, Link, useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useEffect, useRef } from 'react'
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout, selectLogueado } from '../store/slices/userSlice'
 
 function Navbar() {
     const navigate = useNavigate()
-    const logueado = localStorage.getItem('logueado') // busca en el navegador si el usuario está logueado
+    const location = useLocation()
+    const dispatch = useDispatch()
+    const logueado = useSelector(selectLogueado) // lee del store si el usuario está logueado (se actualiza solo)
 
     // cantidad de productos distintos que hay en el carrito (se actualiza sola)
     const cantidad = useSelector((state) => state.cart.items.length)
 
+    // Marca que el usuario apretó "Salir": la sesión se cierra recién cuando ya llegó al inicio.
+    // React Router hace las navegaciones con baja prioridad (startTransition) y el cambio de Redux es inmediato:
+    // si la sesión se cerrara antes de llegar, la ruta protegida (ej: /cart) redirigiría al login en vez de al inicio.
+    const saliendo = useRef(false)
+
     const handleSalir = () => {
-        localStorage.removeItem('logueado') // borra la marca de login
+        // Si ya está en el inicio, la URL no cambia: cierra la sesión directamente
+        if (location.pathname === '/') {
+            dispatch(logout())
+            return
+        }
+        saliendo.current = true
         navigate('/') // vuelve al inicio
     }
+
+    // Cuando la navegación al inicio terminó, cierra la sesión (el carrito también se vacía en pantalla)
+    useEffect(() => {
+        if (saliendo.current && location.pathname === '/') {
+            saliendo.current = false
+            dispatch(logout())
+        }
+    }, [location.pathname, dispatch])
 
         // Clase para los links según si están activos o no
     const getLinkClass = ({ isActive }) => isActive ? 'nav-link active' : 'nav-link'
@@ -25,7 +47,7 @@ function Navbar() {
             <div className="navbar-links">
                 <NavLink to="/" className={getLinkClass}>Inicio</NavLink>
                 <NavLink to="/catalogo" className={getLinkClass}>Catálogo</NavLink>
-                <NavLink to="/cart" className={getLinkClass}>Carrito</NavLink>
+                <NavLink to="/cart" className={getLinkClass}>Carrito ({cantidad})</NavLink>
             </div>
 
             <div className="navbar-auth">

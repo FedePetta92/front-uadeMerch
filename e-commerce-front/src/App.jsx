@@ -1,4 +1,7 @@
+import { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchCart } from './store/slices/cartSlice'
 import Listado from './components/Listado'
 import Home from './pages/Home'
 import ProductDetail from './pages/ProductDetail.jsx'
@@ -11,6 +14,14 @@ import Navbar from './components/Navbar.jsx'
 import './App.css'
 
 function App() {
+  const dispatch = useDispatch()
+  const usuarioId = useSelector((state) => state.user.usuario?.id)
+
+  // Cuando hay un usuario logueado (al iniciar sesión o al recargar la página), trae su carrito de la DB
+  useEffect(() => {
+    if (usuarioId) dispatch(fetchCart())
+  }, [usuarioId, dispatch])
+
   return (
     <div className="App">
       <Navbar />

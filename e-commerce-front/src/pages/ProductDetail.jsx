@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { agregar } from '../store/slices/cartSlice'
+import { addToCart } from '../store/slices/cartSlice'
+import { selectLogueado } from '../store/slices/userSlice'
 import QuantitySelector from '../components/QuantitySelector'
 
 // URL base del backend. Todos los fetch apuntan a este servidor.
@@ -12,47 +13,41 @@ function ProductDetail() {
   // useParams extrae el :id de la URL, ej: /product/3 → id = "3"
   const { id } = useParams()
   const carrito = useSelector((state) => state.cart.items)
+  // cargando: hay un pedido al carrito en curso / error: el último pedido falló
+  const { cargando: guardando, error: errorCarrito } = useSelector((state) => state.cart)
+  const logueado = useSelector(selectLogueado)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [cantidad, setCantidad] = useState(1)
 
-  // producto: objeto con los datos del backend
-  // cargando: true mientras espera la respuesta
-  // error: mensaje de error si el fetch falla
-  const [producto, setProducto] = useState(null)
-  const [cargando, setCargando] = useState(true)
-  const [error, setError] = useState(null)
+  // resultado guarda la respuesta del backend junto con el id que se pidió
+  const [resultado, setResultado] = useState({ id: null, producto: null, error: null })
+  const { producto, error } = resultado
 
-  // useEffect se dispara cada vez que cambia el id en la URL
+  // cargando: true mientras el resultado guardado no sea del id de la URL
+  const cargando = resultado.id !== id
+
   useEffect(() => {
+    // Si el usuario cambia de producto antes de que llegue la respuesta, la vieja se ignora
+    let cancelado = false
 
-    setCargando(true)
-    setError(null)
-
-    // Llama al endpoint GET /api/productos/{id} para traer el detalle de un producto
     fetch(`${API_URL}/api/productos/${id}`)
       .then((res) => {
-        // Si la respuesta no es 2xx (ej: 404) lanza un error
         if (!res.ok) throw new Error('Producto no encontrado')
-        // Convierte la respuesta JSON a un objeto JavaScript
         return res.json()
       })
       .then((data) => {
-        // Guarda el producto en el estado y apaga el indicador de carga
-        setProducto(data)
-        setCargando(false)
+        if (!cancelado) setResultado({ id, producto: data, error: null })
       })
       .catch((err) => {
-        // Si algo falla, guarda el mensaje de error
-        setError(err.message)
-        setCargando(false)
+        if (!cancelado) setResultado({ id, producto: null, error: err.message })
       })
 
-  }, [id]) // Se re-ejecuta si el usuario navega a otro producto (cambia el id)
+    return () => { cancelado = true }
+  }, [id])
 
-  // Muestra mensaje mientras carga
   if (cargando) return <p>Cargando producto...</p>
 
-  // Muestra error si el fetch falló o el producto no existe
   if (error) return (
     <div>
       <p>{error}</p>
@@ -67,30 +62,69 @@ function ProductDetail() {
   const disponible = producto.stock - enCarrito
 
   const handleAgregar = () => {
-    dispatch(agregar({ producto, cantidad }))
+    // El carrito se guarda en la DB por usuario: sin sesión, primero hay que loguearse
+    if (!logueado) {
+      navigate('/login')
+      return
+    }
+    dispatch(addToCart({ producto, cantidad }))
     setCantidad(1)
   }
 
   return (
-    <div className="product-detail">
-      <Link to="/catalogo" style={{ color: '#002b5c', textDecoration: 'none', marginBottom: '20px', display: 'inline-block' }}>
+    <div className="product-detail-wrapper">
+
+      <Link to="/catalogo" className="back-link">
         ← Volver al catálogo
       </Link>
-      <h2>{producto.nombre}</h2>
-      <p>{producto.descripcion}</p>
-      {/* precio viene como número desde el backend, toLocaleString lo formatea con puntos de miles */}
-      <p className="precio">${Number(producto.precio).toLocaleString('es-AR')}</p>
-      <p>Stock disponible: {producto.stock}</p>
-      {disponible > 0 ? (
-        <>
-          <QuantitySelector cantidad={cantidad} onChange={setCantidad} min={1} max={disponible} />
-          <button onClick={handleAgregar} className="btn-primary btn-ancho" disabled={cantidad < 1 || cantidad > disponible}>
-            Agregar al carrito
-          </button>
-        </>
-      ) : (
-        <p>Ya tenés el máximo de stock en el carrito</p>
-      )}
+
+      <div className="product-detail-grid">
+
+        {/* COLUMNA IZQUIERDA: La Imagen */}
+        <div className="product-detail-image">
+          <div className="image-placeholder">
+            [IMAGEN DEL PRODUCTO]
+          </div>
+        </div>
+
+        {/* COLUMNA DERECHA: La Información y Botones */}
+        <div className="product-detail-info">
+          <h1 className="detail-title">{producto.nombre}</h1>
+
+          <p className="detail-description">{producto.descripcion}</p>
+
+          <div className="info-precio-stock">
+            <p className="detail-price">${Number(producto.precio).toLocaleString('es-AR')}</p>
+            <p className="detail-stock">Stock: {producto.stock}</p>
+          </div>
+
+          {errorCarrito && <p className="error-msg">{errorCarrito}</p>}
+
+          {disponible > 0 ? (
+            <>
+              <div className="detail-actions">
+                <QuantitySelector cantidad={cantidad} onChange={setCantidad} min={1} max={disponible} />
+              </div>
+
+              <div className="detail-buttons">
+                <button
+                  onClick={handleAgregar}
+                  className="btn-primary"
+                  disabled={guardando || cantidad < 1 || cantidad > disponible}
+                >
+                  {guardando ? 'Agregando...' : 'Agregar al carrito'}
+                </button>
+
+                <Link to="/cart" className="btn-secondary">
+                  Ir al carrito
+                </Link>
+              </div>
+            </>
+          ) : (
+            <p>Ya tenés el máximo de stock en el carrito</p>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
