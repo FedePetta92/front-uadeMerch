@@ -28,8 +28,10 @@ export async function apiFetch(ruta, { token, ...opciones } = {}) {
         throw error
     }
 
-    // 204 No Content no trae body
-    return res.status === 204 ? null : res.json()
+    // Algunas respuestas OK no traen body: 204 No Content, o 200 vacío de los endpoints void
+    // (ej: DELETE /api/productos/{id}). En esos casos se devuelve null en vez de fallar al leer JSON.
+    const texto = await res.text()
+    return texto ? JSON.parse(texto) : null
 }
 
 // Lee el cuerpo de una respuesta de error: JSON si se puede, si no texto (o null si viene vacío)
