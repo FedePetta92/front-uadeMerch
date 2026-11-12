@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateCartItem, removeFromCart, clearCart } from '../store/slices/cartSlice'
 import QuantitySelector from '../components/QuantitySelector'
@@ -9,6 +9,7 @@ function Cart() {
   // cargando: hay un pedido al backend en curso / error: el último pedido falló
   const { cargando, error } = useSelector((state) => state.cart)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   // Calculamos el total general
   const total = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)
@@ -94,7 +95,14 @@ function Cart() {
           </div>
 
           <div className="summary-buttons">
-            <button className="btn-primary btn-full">Finalizar compra</button>
+            {/* Lleva al paso de pago (Checkout.jsx); se deshabilita mientras se guarda un cambio del carrito */}
+            <button
+              onClick={() => navigate('/checkout')}
+              className="btn-primary btn-full"
+              disabled={cargando}
+            >
+              Finalizar compra
+            </button>
             <button
               onClick={() => dispatch(clearCart())}
               className="btn-secondary btn-full"

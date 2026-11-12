@@ -54,6 +54,10 @@ function crearThunkDelCarrito(nombre, pedido) {
                 dispatch(logout())
                 return rejectWithValue('Tu sesión venció. Volvé a iniciar sesión.')
             }
+            // 400: el backend explica el motivo (ej: "Stock insuficiente para Mate UADE: quedan 2 unidades")
+            if (err.status === 400) {
+                return rejectWithValue(err.message)
+            }
             return rejectWithValue('No se pudo actualizar el carrito. Intentá de nuevo.')
         }
     })

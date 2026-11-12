@@ -29,9 +29,10 @@ function Login() {
         // unwrap() permite saber acá si salió bien (then) o mal (catch)
         dispatch(login({ email, password }))
             .unwrap()
-            .then(() => {
-                // Redirige al carrito sin dejar el login en el historial del navegador
-                navigate('/cart', { replace: true })
+            .then(({ usuario }) => {
+                // Redirige sin dejar el login en el historial del navegador:
+                // el admin va a su panel y el resto al carrito
+                navigate(usuario.rol === 'ADMIN' ? '/admin/productos' : '/cart', { replace: true })
             })
             .catch(() => {
                 // El mensaje de error ya quedó en el store y se muestra en el formulario

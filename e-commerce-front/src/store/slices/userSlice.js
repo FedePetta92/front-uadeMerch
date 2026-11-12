@@ -16,8 +16,10 @@ function leerToken(token) {
 function cargarSesion() {
     try {
         const sesion = JSON.parse(localStorage.getItem(CLAVE_SESION))
-        if (sesion && leerToken(sesion.token).exp * 1000 > Date.now()) {
-            return sesion
+        const datosToken = sesion && leerToken(sesion.token)
+        if (datosToken && datosToken.exp * 1000 > Date.now()) {
+            // Las sesiones guardadas antes de este cambio no tienen rol: se toma del token (o USER)
+            return { ...sesion, usuario: { ...sesion.usuario, rol: sesion.usuario?.rol ?? datosToken.rol ?? 'USER' } }
         }
     } catch {
         // sesión guardada inválida: se arranca sin sesión
@@ -33,7 +35,7 @@ export const login = createAsyncThunk(
     'user/login',
     async ({ email, password }, { rejectWithValue }) => {
         try {
-            // El backend devuelve { token, usuarioId }
+            // El backend devuelve { token, usuarioId, rol }
             const data = await apiFetch('/api/login', {
                 method: 'POST',
                 body: JSON.stringify({ email, password })
@@ -42,7 +44,8 @@ export const login = createAsyncThunk(
             // Lo que se devuelve acá llega como action.payload a login.fulfilled
             return {
                 token: data.token,
-                usuario: { id: data.usuarioId, nombre, apellido, email }
+                // rol: 'USER' o 'ADMIN'. Solo decide qué se muestra; los permisos reales los controla el backend
+                usuario: { id: data.usuarioId, nombre, apellido, email, rol: data.rol ?? 'USER' }
             }
         } catch {
             // Lo que se pasa a rejectWithValue llega como action.payload a login.rejected
@@ -54,7 +57,7 @@ export const login = createAsyncThunk(
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-        ...cargarSesion(), // token y usuario ({ id, nombre, apellido, email }) o null si no hay sesión
+        ...cargarSesion(), // token y usuario ({ id, nombre, apellido, email, rol }) o null si no hay sesión
         cargando: false,   // true mientras se espera la respuesta del login
         error: null        // mensaje si el login falló
     },
@@ -93,6 +96,9 @@ const userSlice = createSlice({
 
 // Selector: el usuario está logueado si hay token
 export const selectLogueado = (state) => Boolean(state.user.token)
+
+// Selector: el usuario logueado es administrador (muestra la pestaña "Admin" y habilita sus rutas)
+export const selectEsAdmin = (state) => state.user.usuario?.rol === 'ADMIN'
 
 export const { logout, limpiarError } = userSlice.actions
 
