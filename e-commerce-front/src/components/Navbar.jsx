@@ -1,13 +1,14 @@
 import { useEffect, useRef } from 'react'
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout, selectLogueado } from '../store/slices/userSlice'
+import { logout, selectLogueado, selectEsAdmin } from '../store/slices/userSlice'
 
 function Navbar() {
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useDispatch()
     const logueado = useSelector(selectLogueado) // lee del store si el usuario está logueado (se actualiza solo)
+    const esAdmin = useSelector(selectEsAdmin)
 
     // cantidad de productos distintos que hay en el carrito (se actualiza sola)
     const cantidad = useSelector((state) => state.cart.items.length)
@@ -48,6 +49,9 @@ function Navbar() {
                 <NavLink to="/" className={getLinkClass}>Inicio</NavLink>
                 <NavLink to="/catalogo" className={getLinkClass}>Catálogo</NavLink>
                 <NavLink to="/cart" className={getLinkClass}>Carrito ({cantidad})</NavLink>
+                {logueado && <NavLink to="/mis-compras" className={getLinkClass}>Mis compras</NavLink>}
+                {/* Pestaña de administración: solo se muestra si el usuario logueado es ADMIN */}
+                {esAdmin && <NavLink to="/admin/productos" className={getLinkClass}>Admin</NavLink>}
             </div>
 
             <div className="navbar-auth">
