@@ -701,3 +701,155 @@ h1, h2 {
   cursor: not-allowed !important;
   opacity: 0.5 !important;
 }
+
+/* =========================================
+   PANEL DE ADMINISTRACIÓN
+   ========================================= */
+.admin-page {
+  text-align: left; /* #root centra todo en index.css: acá lo anulamos */
+}
+
+.admin-page h2 {
+  margin-top: 30px;
+}
+
+/* --- Mensajes --- */
+.error-msg,
+.ok-msg {
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  margin: 10px 0;
+}
+
+.error-msg {
+  background: #fdecea;
+  border: 1px solid #f5c2c0;
+  color: #b3261e;
+}
+
+.ok-msg {
+  background: #e8f5e9;
+  border: 1px solid #b7dfb9;
+  color: #1e6b2a;
+}
+
+/* --- Formulario de alta / edición --- */
+.admin-form {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 10px;
+}
+
+.admin-form h2 {
+  margin-top: 0;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.admin-form-ancho {
+  grid-column: 1 / -1; /* la descripción ocupa las dos columnas */
+}
+
+.admin-form-botones {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.admin-form-botones button {
+  padding: 10px 24px;
+}
+
+/* --- Tabla de productos --- */
+.tabla-scroll {
+  overflow-x: auto;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.admin-tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-tabla th {
+  background: #002b5c;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.admin-tabla td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.admin-tabla tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.admin-tabla tbody tr:hover {
+  background: #f0f4fa;
+}
+
+.admin-tabla .num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.admin-desc {
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 4px;
+}
+
+/* Fila que se está editando arriba en el formulario */
+.admin-tabla tr.fila-editando {
+  background: #fff8e1;
+  box-shadow: inset 4px 0 0 #f2a900;
+}
+
+/* --- Botones de cada fila --- */
+.admin-acciones {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.admin-acciones button + button {
+  margin-left: 8px;
+}
+
+.btn-chico {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+/* "Dar de baja" en rojo solo dentro del panel (el carrito usa la misma clase y no se toca) */
+.admin-acciones .btn-eliminar {
+  border-color: #d93025;
+  color: #d93025;
+  font-weight: 600;
+}
+
+.admin-acciones .btn-eliminar:hover {
+  background: #d93025;
+  color: #fff;
+}
+
+/* --- Celular --- */
+@media (max-width: 768px) {
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
