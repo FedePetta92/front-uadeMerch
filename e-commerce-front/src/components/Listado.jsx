@@ -12,6 +12,8 @@ function Listado() {
   const [productos, setProductos] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
+  const [texto, setTexto] = useState('')
+  const [mensaje, setMensaje] = useState(null)
 
   // useEffect se ejecuta una sola vez cuando el componente se monta ([] como dependencia vacía)
   useEffect(() => {
@@ -37,6 +39,22 @@ function Listado() {
 
   }, []) // [] significa: ejecutar solo al montar el componente, no al re-renderizar
 
+    const buscar = (e) => {
+    e.preventDefault()
+    setMensaje(null)
+    const t = texto.trim()
+    const url = t === ''
+      ? `${API_URL}/api/productos`
+      : `${API_URL}/api/productos/buscar?descripcion=${encodeURIComponent(t)}`
+
+    fetch(url)
+      .then((res) => {
+        if (res.ok) return res.json().then((data) => setProductos(data))
+        return res.text().then((msg) => { setProductos([]); setMensaje(msg) })
+      })
+      .catch(() => { setProductos([]); setMensaje('No se pudo conectar con el servidor') })
+  }
+
   // Muestra un spinner mientras el fetch no terminó
   if (cargando) return <p>Cargando productos...</p>
 
@@ -46,6 +64,21 @@ function Listado() {
   return (
     <div>
       <h1>Catálogo de Productos</h1>
+
+      <form onSubmit={buscar} className="buscador">
+        <input
+          type="text"
+          className="buscador-input"
+          placeholder="Buscar por descripción..."
+          aria-label="Buscar productos por descripción"
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
+        />
+        <button type="submit" className="btn-primary">Buscar</button>
+      </form>
+
+      {mensaje && <p className="buscador-mensaje">{mensaje}</p>}
+
       <div className="listado-productos">
         {/* Recorre el array de productos y renderiza una tarjeta por cada uno */}
         {productos.map((producto) => (
@@ -54,6 +87,7 @@ function Listado() {
       </div>
     </div>
   )
+
 }
 
 export default Listado
